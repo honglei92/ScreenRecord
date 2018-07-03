@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ScreenRecorder</string>
+    <string name="start_record">Start Record</string>
+    <string name="stop_record">Stop Record</string>
+</resources>
