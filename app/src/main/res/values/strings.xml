@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ScreenRecorder</string>
+    <string name="app_name">一录屏</string>
     <string name="start_record">Start Record</string>
     <string name="stop_record">Stop Record</string>
 </resources>
