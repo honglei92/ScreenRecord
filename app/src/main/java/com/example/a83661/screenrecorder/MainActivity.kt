@@ -112,7 +112,7 @@ class MainActivity : BaseActivity() {
         mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         mMediaRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
         mMediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        mMediaRecorder!!.setVideoEncodingBitRate(512 * 1000)
+        mMediaRecorder!!.setVideoEncodingBitRate(1024 * 1024 * 2)
         mMediaRecorder!!.setVideoFrameRate(60)
         mMediaRecorder!!.setVideoSize(mWith, mHeight)
         mMediaRecorder!!.setOutputFile(StringUT.getFilePath())
