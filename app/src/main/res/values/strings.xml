@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">一录屏</string>
-    <string name="start_record">Start Record</string>
-    <string name="stop_record">Stop Record</string>
+    <string name="app_name">录屏宝</string>
+    <string name="start_record">开始</string>
+    <string name="pause_record">暂停</string>
+    <string name="stop_record">停止</string>
+    <string name="open_directory">打开本地目录</string>
+    <string name="clear_directory">清空目录</string>
 </resources>

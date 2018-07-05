@@ -11,7 +11,7 @@ class StringUT {
          * 创建存储路径
          */
         fun getFilePath(): String {
-            var directory = Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
+            val directory = Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
             if (Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()) {
                 return null!!
             }
@@ -28,6 +28,11 @@ class StringUT {
                 return null!!
             }
             return filePath
+        }
+
+        fun getDirectory(): String {
+            return Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
+
         }
 
         /**

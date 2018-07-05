@@ -12,20 +12,30 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
-import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
+import com.example.a83661.screenrecorder.base.BaseActivity
+import com.example.a83661.screenrecorder.util.FileUT
 import com.example.a83661.screenrecorder.util.StringUT
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableObserver
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     val TAG = "honglei92"
     val REQUEST_MEDIA_PROJECTION = 2
     private val START = 0
-    private val STOP = 1
+    private val RUNNING = 1
+    private val PAUSE = 2
+    private val STOP = 3
     var mState: Int = STOP
     var mediaProjectionManager: MediaProjectionManager? = null
     var mMediaProjection: MediaProjection? = null
@@ -37,7 +47,9 @@ class MainActivity : AppCompatActivity() {
     var mWith: Int = 0
     var mHeight: Int = 0
     var mScreenDensity: Int = 0
+    lateinit var disposable: Disposable
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,13 +85,20 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initView() {
         startRecordBtn.setOnClickListener {
-            if (startRecordBtn.text.toString() == (getString(R.string.start_record))) {
-                startRecordBtn.text = getString(R.string.stop_record)
+            if (mState == STOP) {
                 onHandle(START)
-            } else {
-                startRecordBtn.text = getString(R.string.start_record)
+            }
+        }
+        stopRecordBtn.setOnClickListener {
+            if (mState == RUNNING) {
                 onHandle(STOP)
             }
+        }
+        openLocalBtn.setOnClickListener {
+            FileUT.openAssignFolder(this, StringUT.getDirectory())
+        }
+        clearLocalBtn.setOnClickListener {
+            FileUT.clearAssignFolder(this, StringUT.getDirectory())
         }
     }
 
@@ -94,7 +113,7 @@ class MainActivity : AppCompatActivity() {
         mMediaRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
         mMediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
         mMediaRecorder!!.setVideoEncodingBitRate(512 * 1000)
-        mMediaRecorder!!.setVideoFrameRate(30)
+        mMediaRecorder!!.setVideoFrameRate(60)
         mMediaRecorder!!.setVideoSize(mWith, mHeight)
         mMediaRecorder!!.setOutputFile(StringUT.getFilePath())
         prepareRecorder()
@@ -122,8 +141,7 @@ class MainActivity : AppCompatActivity() {
     private fun initCallBack() {
         callback = object : Callback() {
             override fun onStop() {
-                if (mState == START) {
-                    startRecordBtn.setText(R.string.stop_record)
+                if (mState == RUNNING) {
                     mMediaRecorder!!.stop()
                     mMediaRecorder!!.reset()
                 }
@@ -138,9 +156,33 @@ class MainActivity : AppCompatActivity() {
      */
     private fun onHandle(code: Int) {
         if (code == START) {
+            mState = RUNNING
             initRecorder()
             shareScreen()
-        } else {
+            runOnUiThread {
+                Observable.interval(0, 1, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                object : Observer<Long> {
+                                    override fun onSubscribe(d: Disposable?) {
+                                        disposable = d!!
+                                    }
+
+                                    override fun onComplete() {
+                                    }
+
+                                    override fun onNext(value: Long?) {
+                                        Log.d(TAG, value.toString())
+                                        secondsTv.text = value.toString() + "秒"
+                                    }
+
+                                    override fun onError(e: Throwable?) {
+                                    }
+                                })
+            }
+        } else if (code == STOP) {
+            mState = STOP
             stopScreenSharing()
         }
     }
@@ -158,8 +200,25 @@ class MainActivity : AppCompatActivity() {
         mState = START
     }
 
+    private fun getObserver(): DisposableObserver<Long> {
+        return object : DisposableObserver<Long>() {
+            override fun onComplete() {
+
+            }
+
+            override fun onNext(value: Long?) {
+                secondsTv.setText(value.toString() + "秒")
+            }
+
+            override fun onError(e: Throwable?) {
+
+            }
+
+        }
+    }
+
     /**
-     * 结束录制
+     * 停止录制
      */
     private fun stopScreenSharing() {
         mMediaRecorder!!.stop()
@@ -170,6 +229,14 @@ class MainActivity : AppCompatActivity() {
         mVirtualDisplay!!.release()
         mState = STOP
         destroyMediaProjection()
+        closeTimer()
+    }
+
+    /**
+     * 结束定时器
+     */
+    private fun closeTimer() {
+        disposable.dispose()
     }
 
     /**
