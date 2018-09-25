@@ -1,20 +1,24 @@
-package com.example.a83661.screenrecorder
+package com.example.a83661.screenrecorder.ui.fragment
 
-import android.app.Activity
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.MediaRecorder
 import android.media.projection.MediaProjection
-import android.media.projection.MediaProjection.Callback
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.v4.app.Fragment
 import android.util.DisplayMetrics
 import android.util.Log
-import com.example.a83661.screenrecorder.base.BaseActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import com.example.a83661.screenrecorder.R
 import com.example.a83661.screenrecorder.util.FileUT
 import com.example.a83661.screenrecorder.util.StringUT
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -22,14 +26,18 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_record.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
+/**
+ * @author: https://github.com/honglei92
+ * @time: 2018/9/9
+ */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class MainActivity : BaseActivity() {
+class RecordFragment : Fragment() {
+    //定义常变量
     val TAG = "honglei92"
     val REQUEST_MEDIA_PROJECTION = 2
     private val START = 0
@@ -41,7 +49,7 @@ class MainActivity : BaseActivity() {
     var mMediaProjection: MediaProjection? = null
     var mMediaRecorder: MediaRecorder? = null
     var mVirtualDisplay: VirtualDisplay? = null
-    var callback: Callback? = null
+    var callback: MediaProjection.Callback? = null
     var mResultCode: Int = 0
     var mResultData: Intent? = null
     var mWith: Int = 0
@@ -49,18 +57,23 @@ class MainActivity : BaseActivity() {
     var mScreenDensity: Int = 0
     lateinit var disposable: Disposable
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        init()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_record, null)
+        initView(view)
+        return view
+    }
+
+    private fun initView(view: View) {
+        init(view)
     }
 
     /**
      * 初始化权限和屏幕尺寸
      */
-    private fun init() {
-        var rxPermissions = RxPermissions(this)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun init(view: View) {
+        //请求权限
+        val rxPermissions = RxPermissions(activity)
         rxPermissions.request(android.Manifest.permission.RECORD_AUDIO
                 , android.Manifest.permission.CAMERA
                 , android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -72,33 +85,37 @@ class MainActivity : BaseActivity() {
                     }
                 }
         val mDisplayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(mDisplayMetrics)
+        activity.windowManager.defaultDisplay.getMetrics(mDisplayMetrics)
         mWith = mDisplayMetrics.widthPixels
         mHeight = mDisplayMetrics.heightPixels
         mScreenDensity = mDisplayMetrics.densityDpi
-        mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        initView()
+        mediaProjectionManager = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        initMyView(view)
     }
 
     /**
      * 初始化视图
      */
-    private fun initView() {
-        startRecordBtn.setOnClickListener {
+    private fun initMyView(view: View) {
+        val mStartRecordBtn = view.findViewById<Button>(R.id.startRecordBtn)
+        mStartRecordBtn.setOnClickListener {
             if (mState == STOP) {
                 onHandle(START)
             }
         }
-        stopRecordBtn.setOnClickListener {
+        val mStopRecordBtn = view.findViewById<Button>(R.id.stopRecordBtn)
+        mStopRecordBtn.setOnClickListener {
             if (mState == RUNNING) {
                 onHandle(STOP)
             }
         }
-        openLocalBtn.setOnClickListener {
-            FileUT.openAssignFolder(this, StringUT.getDirectory())
+        val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
+        mOpenLocalBtn.setOnClickListener {
+            FileUT.openAssignFolder(activity, StringUT.getDirectory())
         }
-        clearLocalBtn.setOnClickListener {
-            FileUT.clearAssignFolder(this, StringUT.getDirectory())
+        val mClearLocalBtn = view.findViewById<Button>(R.id.clearLocalBtn)
+        mClearLocalBtn.setOnClickListener {
+            FileUT.clearAssignFolder(activity, StringUT.getDirectory())
         }
     }
 
@@ -127,10 +144,10 @@ class MainActivity : BaseActivity() {
             mMediaRecorder!!.prepare()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
-            finish()
+            activity.finish()
         } catch (e: IOException) {
             e.printStackTrace()
-            finish()
+            activity.finish()
         }
         initCallBack()
     }
@@ -138,8 +155,9 @@ class MainActivity : BaseActivity() {
     /**
      * 监听回调
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initCallBack() {
-        callback = object : Callback() {
+        callback = object : MediaProjection.Callback() {
             override fun onStop() {
                 if (mState == RUNNING) {
                     mMediaRecorder!!.stop()
@@ -154,30 +172,34 @@ class MainActivity : BaseActivity() {
     /**
      * 点击事件
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun onHandle(code: Int) {
         if (code == START) {
             mState = RUNNING
             initRecorder()
             shareScreen()
-            runOnUiThread {
+            activity.runOnUiThread {
                 Observable.interval(0, 1, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 object : Observer<Long> {
-                                    override fun onSubscribe(d: Disposable?) {
-                                        disposable = d!!
-                                    }
-
                                     override fun onComplete() {
+
                                     }
 
-                                    override fun onNext(value: Long?) {
-                                        Log.d(TAG, value.toString())
-                                        secondsTv.text = value.toString() + "秒"
+                                    override fun onSubscribe(d: Disposable) {
+                                        disposable = d!!
+
                                     }
 
-                                    override fun onError(e: Throwable?) {
+                                    override fun onNext(t: Long) {
+                                        Log.d(TAG, t.toString())
+                                        secondsTv.text = t.toString() + "秒"
+                                    }
+
+                                    override fun onError(e: Throwable) {
+
                                     }
                                 })
             }
@@ -190,9 +212,10 @@ class MainActivity : BaseActivity() {
     /**
      * 开始录制
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun shareScreen() {
         if (mMediaProjection == null) {
-            startActivityForResult(mediaProjectionManager!!.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION)
+            activity.startActivityForResult(mediaProjectionManager!!.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION)
             return
         }
         mVirtualDisplay = createVirtualDisplay()
@@ -200,26 +223,10 @@ class MainActivity : BaseActivity() {
         mState = START
     }
 
-    private fun getObserver(): DisposableObserver<Long> {
-        return object : DisposableObserver<Long>() {
-            override fun onComplete() {
-
-            }
-
-            override fun onNext(value: Long?) {
-                secondsTv.setText(value.toString() + "秒")
-            }
-
-            override fun onError(e: Throwable?) {
-
-            }
-
-        }
-    }
-
     /**
      * 停止录制
      */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun stopScreenSharing() {
         mMediaRecorder!!.stop()
         mMediaRecorder!!.reset()
@@ -242,6 +249,7 @@ class MainActivity : BaseActivity() {
     /**
      * 销毁projection
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun destroyMediaProjection() {
         if (mMediaProjection != null) {
             mMediaProjection!!.unregisterCallback(callback)
@@ -253,6 +261,7 @@ class MainActivity : BaseActivity() {
     /**
      * 创建display
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun createVirtualDisplay(): VirtualDisplay? {
         return mMediaProjection!!.createVirtualDisplay("MainActivity",
                 mWith, mHeight, mScreenDensity, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
@@ -263,30 +272,34 @@ class MainActivity : BaseActivity() {
      * 绑定projection
      */
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setUpMediaProjection() {
         mMediaProjection = mediaProjectionManager!!.getMediaProjection(mResultCode, mResultData)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_MEDIA_PROJECTION) {
-            if (resultCode != Activity.RESULT_OK) {
-                Log.d(TAG, "Permission Denial: can't record")
-                return
-            }
-            mResultCode = resultCode
-            mResultData = data
-            setUpMediaProjection()
-            mMediaProjection!!.registerCallback(callback, null)
-            mVirtualDisplay = createVirtualDisplay()
-            mMediaRecorder!!.start()
-        }
-    }
-
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onDestroy() {
         super.onDestroy()
         if (mMediaProjection != null) {
             mMediaProjection!!.stop()
             mMediaProjection = null
         }
+    }
+
+    companion object {
+        fun getInstance(): RecordFragment {
+            val mRecordFragment = RecordFragment()
+            return mRecordFragment
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun onResult(resultCode: Int, data: Intent?) {
+        mResultCode = resultCode
+        mResultData = data
+        setUpMediaProjection()
+        mMediaProjection!!.registerCallback(callback, null)
+        mVirtualDisplay = createVirtualDisplay()
+        mMediaRecorder!!.start()
     }
 }

@@ -11,7 +11,7 @@ import android.view.WindowManager
  * @author:honglei92
  * @time:2018/7/4
  */
-open class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,5 +19,8 @@ open class BaseActivity : AppCompatActivity() {
         var option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.decorView.systemUiVisibility = option
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        initView()
     }
+
+    abstract fun initView()
 }
