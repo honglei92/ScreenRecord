@@ -1,6 +1,7 @@
 package com.example.a83661.screenrecorder.util
 
 import android.os.Environment
+import com.example.a83661.screenrecorder.base.Constants
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -11,18 +12,18 @@ class StringUT {
          * 创建存储路径
          */
         fun getFilePath(): String {
-            val directory = Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
+            val directory = Constants.directory
             if (Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()) {
                 return null!!
             }
-            var folder = File(directory)
+            val folder = File(directory)
             var success = true
             if (!folder.exists()) {
                 success = folder.mkdir()
             }
-            var filePath: String
+            val filePath: String
             if (success) {
-                var videoName = ("capture" + getCurSysDate() + ".mp4")
+                val videoName = ("capture" + getCurSysDate() + ".mp4")
                 filePath = directory + File.separator + videoName
             } else {
                 return null!!

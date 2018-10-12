@@ -13,7 +13,7 @@ import java.io.File
 class FileUT {
     companion object {
         fun openAssignFolder(activity: Activity, path: String) {
-            var file = File(path)
+            val file = File(path)
             if (null == file || !file.exists()) {
                 return
             }
@@ -33,7 +33,7 @@ class FileUT {
         }
 
         fun clearAssignFolder(mainActivity: Activity, directory: String) {
-            var file = File(directory)
+            val file = File(directory)
             if (null == file || !file.exists()) {
                 return
             }

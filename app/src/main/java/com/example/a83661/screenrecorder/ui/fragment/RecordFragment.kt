@@ -32,6 +32,8 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
+ *
+ *录制
  * @author: https://github.com/honglei92
  * @time: 2018/9/9
  */
@@ -109,14 +111,14 @@ class RecordFragment : Fragment() {
                 onHandle(STOP)
             }
         }
-        val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
+        /*val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
         mOpenLocalBtn.setOnClickListener {
             FileUT.openAssignFolder(activity, StringUT.getDirectory())
         }
         val mClearLocalBtn = view.findViewById<Button>(R.id.clearLocalBtn)
         mClearLocalBtn.setOnClickListener {
             FileUT.clearAssignFolder(activity, StringUT.getDirectory())
-        }
+        }*/
     }
 
     /**

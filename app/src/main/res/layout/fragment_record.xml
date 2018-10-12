@@ -41,24 +41,4 @@
             android:text="0秒" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/openLocalBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/open_directory" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/clearLocalBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/clear_directory" />
-    </LinearLayout>
 </LinearLayout>
