@@ -15,8 +15,8 @@
         app:centerText="屏幕录制"
         app:centerTextColor="#ffffff"
         app:centerTextSize="16sp"
-        app:statusBarColor="#128EEE"
-        app:titleBarColor="#128EEE"
+        app:statusBarColor="#E31D1A"
+        app:titleBarColor="#E31D1A"
         titlebar:centerType="textView" />
 
     <com.androidkun.xtablayout.XTabLayout

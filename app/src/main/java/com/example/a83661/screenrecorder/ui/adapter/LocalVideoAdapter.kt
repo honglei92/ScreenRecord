@@ -20,6 +20,7 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
             view = View.inflate(context, R.layout.item_local_video, null)
             viewHolder.tvName = view.findViewById(R.id.tvName)
             viewHolder.tvCreateTime = view.findViewById(R.id.tvCreateTime)
+            viewHolder.tvDurationTime = view.findViewById(R.id.tvDurationTime)
             viewHolder.ivVideo = view.findViewById(R.id.ivImage)
             view.tag = viewHolder
         } else {
@@ -28,7 +29,11 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
         }
         viewHolder.tvName.text = list.get(p0).name
         viewHolder.tvCreateTime.text = "保存于: " + list.get(p0).createTime
+        viewHolder.tvDurationTime.text = "时长: " + list.get(p0).getDurationTime()
         viewHolder.ivVideo.setImageBitmap(list.get(p0).getThumbImg())
+        viewHolder.ivVideo.setOnClickListener {
+
+        }
         return view
     }
 
@@ -47,6 +52,7 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
     class ViewHolder {
         lateinit var tvName: TextView
         lateinit var tvCreateTime: TextView
+        lateinit var tvDurationTime: TextView
         lateinit var ivVideo: ImageView
     }
 }

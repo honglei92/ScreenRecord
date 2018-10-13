@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.example.a83661.screenrecorder.R
 import com.example.a83661.screenrecorder.util.FileUT
 import com.example.a83661.screenrecorder.util.StringUT
@@ -105,20 +106,27 @@ class RecordFragment : Fragment() {
                 onHandle(START)
             }
         }
+        val mPauseRecordBtn = view.findViewById<Button>(R.id.pauseRecordBtn)
+        mPauseRecordBtn.setOnClickListener {
+            if (mState == RUNNING) {
+                onHandle(STOP)
+            }
+        }
         val mStopRecordBtn = view.findViewById<Button>(R.id.stopRecordBtn)
         mStopRecordBtn.setOnClickListener {
             if (mState == RUNNING) {
                 onHandle(STOP)
             }
         }
-        /*val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
+        val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
         mOpenLocalBtn.setOnClickListener {
             FileUT.openAssignFolder(activity, StringUT.getDirectory())
         }
         val mClearLocalBtn = view.findViewById<Button>(R.id.clearLocalBtn)
         mClearLocalBtn.setOnClickListener {
             FileUT.clearAssignFolder(activity, StringUT.getDirectory())
-        }*/
+            Toast.makeText(activity, "清理完成", Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**

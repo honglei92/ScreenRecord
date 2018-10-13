@@ -12,33 +12,70 @@
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/startRecordBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/start_record" />
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/start_record"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/pauseRecordBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/pause_record" />
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/pause_record"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/stopRecordBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="@string/stop_record" />
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/stop_record"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/secondsTv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="3"
+            android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:text="0秒" />
+            android:text="0秒"
+            android:textColor="#333333"
+            android:textSize="14sp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/openLocalBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/open_directory"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/clearLocalBtn"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_bg"
+            android:text="@string/clear_directory"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

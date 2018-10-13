@@ -21,6 +21,10 @@ class Video {
      *创建时间
      */
     var createTime: String? = null
+    /**
+     *时长
+     */
+    var duration: String? = null
 
     fun getThumbImg(): Bitmap? {
         var bitmap: Bitmap? = null
@@ -41,4 +45,26 @@ class Video {
         }
         return bitmap
     }
+
+    fun getDurationTime(): String? {
+        var duration = ""
+        val mmr = MediaMetadataRetriever()
+        try {
+            mmr.setDataSource(path)
+            duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            duration = (duration.toInt() / 1000).toString() + " s"
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                mmr.release()
+            } catch (e: RuntimeException) {
+                e.printStackTrace()
+            }
+        }
+        return duration
+    }
+
 }

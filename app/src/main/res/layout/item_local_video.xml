@@ -15,7 +15,8 @@
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="120dp"
-            android:layout_height="60dp" />
+            android:scaleType="center"
+            android:layout_height="70dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +39,18 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:textColor="#666666"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tool:text="保存于:20181013 21:59" />
+
+            <TextView
+                android:id="@+id/tvDurationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="#666666"
+                android:textSize="10sp"
+                tool:text="时长:15" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
