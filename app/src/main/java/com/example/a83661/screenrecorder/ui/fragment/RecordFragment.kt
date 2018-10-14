@@ -1,6 +1,7 @@
 package com.example.a83661.screenrecorder.ui.fragment
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.hardware.display.DisplayManager
@@ -76,7 +77,7 @@ class RecordFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun init(view: View) {
         //请求权限
-        val rxPermissions = RxPermissions(activity)
+        val rxPermissions = RxPermissions(activity as Activity)
         rxPermissions.request(android.Manifest.permission.RECORD_AUDIO
                 , android.Manifest.permission.CAMERA
                 , android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -88,11 +89,11 @@ class RecordFragment : Fragment() {
                     }
                 }
         val mDisplayMetrics = DisplayMetrics()
-        activity.windowManager.defaultDisplay.getMetrics(mDisplayMetrics)
+        activity!!.windowManager.defaultDisplay.getMetrics(mDisplayMetrics)
         mWith = mDisplayMetrics.widthPixels
         mHeight = mDisplayMetrics.heightPixels
         mScreenDensity = mDisplayMetrics.densityDpi
-        mediaProjectionManager = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        mediaProjectionManager = activity!!.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         initMyView(view)
     }
 
@@ -154,10 +155,10 @@ class RecordFragment : Fragment() {
             mMediaRecorder!!.prepare()
         } catch (e: IllegalStateException) {
             e.printStackTrace()
-            activity.finish()
+            activity!!.finish()
         } catch (e: IOException) {
             e.printStackTrace()
-            activity.finish()
+            activity!!.finish()
         }
         initCallBack()
     }
@@ -188,7 +189,7 @@ class RecordFragment : Fragment() {
             mState = RUNNING
             initRecorder()
             shareScreen()
-            activity.runOnUiThread {
+            activity!!.runOnUiThread {
                 Observable.interval(0, 1, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -225,7 +226,7 @@ class RecordFragment : Fragment() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun shareScreen() {
         if (mMediaProjection == null) {
-            activity.startActivityForResult(mediaProjectionManager!!.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION)
+            activity!!.startActivityForResult(mediaProjectionManager!!.createScreenCaptureIntent(), REQUEST_MEDIA_PROJECTION)
             return
         }
         mVirtualDisplay = createVirtualDisplay()

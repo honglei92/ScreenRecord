@@ -1,6 +1,8 @@
 package com.example.a83661.screenrecorder.ui.fragment
 
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -54,6 +56,7 @@ class LocalFragment : Fragment() {
     private fun getVideoList(file: File): ArrayList<Video> {
         val mList = arrayListOf<Video>()
         file.listFiles(object : FileFilter {
+            @RequiresApi(Build.VERSION_CODES.GINGERBREAD)
             override fun accept(file: File?): Boolean {
                 var name = file!!.name
                 val i = name.indexOf(".")
