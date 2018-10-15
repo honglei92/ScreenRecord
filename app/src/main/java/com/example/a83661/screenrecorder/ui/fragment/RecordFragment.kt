@@ -140,7 +140,7 @@ class RecordFragment : Fragment() {
         mMediaRecorder!!.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
         mMediaRecorder!!.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
         mMediaRecorder!!.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        mMediaRecorder!!.setVideoEncodingBitRate(1024 * 1024 * 2)
+        mMediaRecorder!!.setVideoEncodingBitRate(1024 * 1024 * 4)
         mMediaRecorder!!.setVideoFrameRate(60)
         mMediaRecorder!!.setVideoSize(mWith, mHeight)
         mMediaRecorder!!.setOutputFile(StringUT.getFilePath())

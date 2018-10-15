@@ -52,7 +52,7 @@ class Video {
         try {
             mmr.setDataSource(path)
             duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            duration = (duration.toInt() / 1000).toString() + " s"
+            duration = (duration.toInt() / 1000).toString() + "s"
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         } catch (e: RuntimeException) {
