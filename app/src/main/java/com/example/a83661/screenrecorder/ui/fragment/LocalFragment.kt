@@ -45,7 +45,7 @@ class LocalFragment : Fragment() {
     private fun initVideoLv() {
         val file = File(Constants.directory)
         mVideoList = getVideoList(file)
-        val adapter = LocalVideoAdapter(activity, mVideoList)
+        val adapter = LocalVideoAdapter(activity!!, mVideoList)
         mLocalVideoLv!!.adapter = adapter
         mSwipeRefreshLayout!!.isRefreshing = false
     }

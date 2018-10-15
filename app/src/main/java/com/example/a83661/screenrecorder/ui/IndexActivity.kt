@@ -31,7 +31,7 @@ class IndexActivity : BaseActivity() {
 
     override fun initView() {
         setContentView(R.layout.activity_index)
-        val titles = arrayOf("录制", "本地视频", "转gif")
+        val titles = arrayOf("录制", "本地视频", "已转Gif")
         mViewPagerCom.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment? {
                 when (position) {

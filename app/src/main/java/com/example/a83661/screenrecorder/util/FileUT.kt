@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.app.FragmentActivity
 import java.io.File
 
 /**
@@ -12,7 +13,7 @@ import java.io.File
  */
 class FileUT {
     companion object {
-        fun openAssignFolder(activity: Activity, path: String) {
+        fun openAssignFolder(activity: FragmentActivity, path: String) {
             val file = File(path)
             if (null == file || !file.exists()) {
                 return
@@ -32,7 +33,7 @@ class FileUT {
 
         }
 
-        fun clearAssignFolder(mainActivity: Activity, directory: String) {
+        fun clearAssignFolder(mainActivity: FragmentActivity, directory: String) {
             val file = File(directory)
             if (null == file || !file.exists()) {
                 return

@@ -121,11 +121,11 @@ class RecordFragment : Fragment() {
         }
         val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
         mOpenLocalBtn.setOnClickListener {
-            FileUT.openAssignFolder(activity, StringUT.getDirectory())
+            FileUT.openAssignFolder(activity!!, StringUT.getDirectory())
         }
         val mClearLocalBtn = view.findViewById<Button>(R.id.clearLocalBtn)
         mClearLocalBtn.setOnClickListener {
-            FileUT.clearAssignFolder(activity, StringUT.getDirectory())
+            FileUT.clearAssignFolder(activity!!, StringUT.getDirectory())
             Toast.makeText(activity, "清理完成", Toast.LENGTH_SHORT).show()
         }
     }

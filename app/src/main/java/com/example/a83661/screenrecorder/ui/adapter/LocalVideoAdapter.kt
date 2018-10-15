@@ -1,8 +1,8 @@
 package com.example.a83661.screenrecorder.ui.adapter
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +12,11 @@ import android.widget.TextView
 import com.example.a83661.screenrecorder.R
 import com.example.a83661.screenrecorder.bean.Video
 import com.example.a83661.screenrecorder.ui.VideoPlayActivity
+import com.yorhp.tyhjffmpeg.Mv2Gif
+import com.yorhp.tyhjffmpeg.Setting
 import java.io.File
 
-class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : BaseAdapter() {
+class LocalVideoAdapter(val context: FragmentActivity, var list: ArrayList<Video>) : BaseAdapter() {
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         Log.d("honglei92", "execute：" + p0)
         val viewHolder: ViewHolder
@@ -27,6 +29,7 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
             viewHolder.tvDurationTime = view.findViewById(R.id.tvDurationTime)
             viewHolder.ivVideo = view.findViewById(R.id.ivImage)
             viewHolder.ivShare = view.findViewById(R.id.ivShare)
+            viewHolder.ivGif = view.findViewById(R.id.ivGif)
             view.tag = viewHolder
         } else {
             view = p1
@@ -52,6 +55,21 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
             context.startActivity(Intent.createChooser(shareIntent, "分享"))
 
         }
+        viewHolder.ivGif.setOnClickListener {
+            Thread(Runnable {
+                val pathFrom = list[p0].path
+                val pathTo = list[p0].path!!.replace("mp4", "gif")
+                val setting = Setting(
+                        true,
+                        1080,
+                        1920,
+                        20,
+                        0,
+                        20
+                )
+                Mv2Gif.convert(pathFrom, pathTo, setting)
+            }).start()
+        }
         return view
     }
 
@@ -73,5 +91,6 @@ class LocalVideoAdapter(val context: Context, var list: ArrayList<Video>) : Base
         lateinit var tvDurationTime: TextView
         lateinit var ivVideo: ImageView
         lateinit var ivShare: ImageView
+        lateinit var ivGif: ImageView
     }
 }
