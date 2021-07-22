@@ -25,4 +25,15 @@ class ExampleUnitTest {
             }
         }
     }
+
+    @Test
+    fun memoryThreadTest() {
+        for (i in 0 until 100000) {
+//            println("" + i)
+            val runnable = Runnable {
+                run { println("" + i) }
+            }
+            Thread(runnable).start()
+        }
+    }
 }

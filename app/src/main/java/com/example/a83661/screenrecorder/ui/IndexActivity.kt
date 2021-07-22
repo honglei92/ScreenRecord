@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_index.*
  */
 class IndexActivity : BaseActivity() {
     val REQUEST_MEDIA_PROJECTION = 2
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class IndexActivity : BaseActivity() {
     var recordFragment: RecordFragment? = null
 
     override fun initView() {
+        testMemory()
         setContentView(R.layout.activity_index)
         val titles = arrayOf("录制", "本地视频", "已转Gif")
         mViewPagerCom.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
@@ -70,6 +72,18 @@ class IndexActivity : BaseActivity() {
                     }
                 })
     }
+
+    fun testMemory() {
+        for (i in 0 until 1000000) {
+//            println("" + i)
+            val runnable = Runnable {
+                run { println("" + i) }
+                var bytes = arrayOfNulls<Byte>(1024);
+            }
+            Thread(runnable).start()
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
