@@ -75,10 +75,12 @@ class IndexActivity : BaseActivity() {
 
     fun testMemory() {
         for (i in 0 until 1000000) {
-//            println("" + i)
             val runnable = Runnable {
-                run { println("" + i) }
-                var bytes = arrayOfNulls<Byte>(1024);
+                run {
+                    println(Thread.currentThread().name + "_ _" + i + "__active num" + Thread.activeCount())
+                    Thread.sleep(100000)
+                }
+
             }
             Thread(runnable).start()
         }

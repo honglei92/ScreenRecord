@@ -31,9 +31,20 @@ class ExampleUnitTest {
         for (i in 0 until 100000) {
 //            println("" + i)
             val runnable = Runnable {
-                run { println("" + i) }
+                run { println(Thread.currentThread().name + i) }
             }
             Thread(runnable).start()
+        }
+    }
+
+    @Test
+    fun stackOverFlow() {
+        getValue(1);
+    }
+
+    private fun getValue(i: Int) {
+        while (i == 1) {
+            getValue(i)
         }
     }
 }
