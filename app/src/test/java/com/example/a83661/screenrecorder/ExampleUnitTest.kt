@@ -18,7 +18,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun memoryTest() = runBlocking {
+    fun memoryCoroutineTest() = runBlocking {
         repeat(100000) {
             this.launch {
                 println("123")
@@ -45,6 +45,20 @@ class ExampleUnitTest {
     private fun getValue(i: Int) {
         while (i == 1) {
             getValue(i)
+        }
+    }
+
+    @Test
+    fun memoryTest() {
+        var list = mutableListOf<OOMObject>()
+        while (true) {
+            list.add(OOMObject())
+        }
+    }
+
+    class OOMObject {
+        companion object {
+            var a: String = "12333333333333333333333333333333333333"
         }
     }
 }
