@@ -31,7 +31,7 @@ class IndexActivity : BaseActivity() {
     var recordFragment: RecordFragment? = null
 
     override fun initView() {
-        testMemory()
+//        testMemory()
         setContentView(R.layout.activity_index)
         val titles = arrayOf("录制", "本地视频", "已转Gif")
         mViewPagerCom.adapter = object : FragmentPagerAdapter(supportFragmentManager) {

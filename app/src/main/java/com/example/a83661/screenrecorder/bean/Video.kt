@@ -51,7 +51,7 @@ class Video {
         val mmr = MediaMetadataRetriever()
         try {
             mmr.setDataSource(path)
-            duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toString()
             duration = (duration.toInt() / 1000).toString() + "s"
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()

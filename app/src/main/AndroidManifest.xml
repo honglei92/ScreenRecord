@@ -10,6 +10,8 @@
     <uses-feature android:name="android.hardware.Camera" />
     <uses-feature android:name="android.hardware.Camera.AutoFocusCallback" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,7 +19,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.IndexActivity">
+        <service
+            android:name=".service.RecordService"
+            android:enabled="true"
+            android:foregroundServiceType="mediaProjection"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".ui.IndexActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

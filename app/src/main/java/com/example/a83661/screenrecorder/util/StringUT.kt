@@ -1,6 +1,7 @@
 package com.example.a83661.screenrecorder.util
 
 import android.os.Environment
+import android.support.v4.app.FragmentActivity
 import com.example.a83661.screenrecorder.base.Constants
 import java.io.File
 import java.text.SimpleDateFormat
@@ -11,8 +12,11 @@ class StringUT {
         /**
          * 创建存储路径
          */
-        fun getFilePath(): String {
-            val directory = Constants.directory
+        fun getFilePath(activity: FragmentActivity?): String {
+            var sb: StringBuffer = StringBuffer()
+            sb.append(activity!!.getExternalFilesDir(Environment.DIRECTORY_MOVIES).toString())
+            sb.append(Constants.directory)
+            val directory = sb.toString()
             if (Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()) {
                 return null!!
             }
@@ -31,8 +35,9 @@ class StringUT {
             return filePath
         }
 
-        fun getDirectory(): String {
-            return Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
+        fun getDirectory(activity: FragmentActivity?): String {
+            val path = activity!!.getExternalFilesDir(Environment.DIRECTORY_MOVIES).toString()
+            return path + File.separator + "aScreenRecordings"
 
         }
 

@@ -1,5 +1,6 @@
 package com.example.a83661.screenrecorder.ui.fragment
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
@@ -21,6 +22,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import com.example.a83661.screenrecorder.R
+import com.example.a83661.screenrecorder.service.RecordService
 import com.example.a83661.screenrecorder.util.FileUT
 import com.example.a83661.screenrecorder.util.StringUT
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -74,6 +76,7 @@ class RecordFragment : Fragment() {
     /**
      * 初始化权限和屏幕尺寸
      */
+    @SuppressLint("CheckResult")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun init(view: View) {
         //请求权限
@@ -93,6 +96,7 @@ class RecordFragment : Fragment() {
         mWith = mDisplayMetrics.widthPixels
         mHeight = mDisplayMetrics.heightPixels
         mScreenDensity = mDisplayMetrics.densityDpi
+        //初始化MediaProjectionManager
         mediaProjectionManager = activity!!.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         initMyView(view)
     }
@@ -121,11 +125,11 @@ class RecordFragment : Fragment() {
         }
         val mOpenLocalBtn = view.findViewById<Button>(R.id.openLocalBtn)
         mOpenLocalBtn.setOnClickListener {
-            FileUT.openAssignFolder(activity!!, StringUT.getDirectory())
+            FileUT.openAssignFolder(activity!!, StringUT.getDirectory(activity))
         }
         val mClearLocalBtn = view.findViewById<Button>(R.id.clearLocalBtn)
         mClearLocalBtn.setOnClickListener {
-            FileUT.clearAssignFolder(activity!!, StringUT.getDirectory())
+            FileUT.clearAssignFolder(activity!!, StringUT.getDirectory(activity))
             Toast.makeText(activity, "清理完成", Toast.LENGTH_SHORT).show()
         }
     }
@@ -143,7 +147,7 @@ class RecordFragment : Fragment() {
         mMediaRecorder!!.setVideoEncodingBitRate(1024 * 1024 * 4)
         mMediaRecorder!!.setVideoFrameRate(60)
         mMediaRecorder!!.setVideoSize(mWith, mHeight)
-        mMediaRecorder!!.setOutputFile(StringUT.getFilePath())
+        mMediaRecorder!!.setOutputFile(StringUT.getFilePath(activity))
         prepareRecorder()
     }
 
@@ -200,10 +204,11 @@ class RecordFragment : Fragment() {
                                     }
 
                                     override fun onSubscribe(d: Disposable) {
-                                        disposable = d!!
+                                        disposable = d
 
                                     }
 
+                                    @SuppressLint("SetTextI18n")
                                     override fun onNext(t: Long) {
                                         Log.d(TAG, t.toString())
                                         secondsTv.text = t.toString() + "秒"
@@ -270,7 +275,7 @@ class RecordFragment : Fragment() {
     }
 
     /**
-     * 创建display
+     * 创建虛擬display
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun createVirtualDisplay(): VirtualDisplay? {
@@ -285,7 +290,7 @@ class RecordFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setUpMediaProjection() {
-        mMediaProjection = mediaProjectionManager!!.getMediaProjection(mResultCode, mResultData)
+        mMediaProjection = mediaProjectionManager!!.getMediaProjection(mResultCode, mResultData!!)
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -308,6 +313,8 @@ class RecordFragment : Fragment() {
     fun onResult(resultCode: Int, data: Intent?) {
         mResultCode = resultCode
         mResultData = data
+        val intent = Intent(activity, RecordService::class.java)
+        activity?.startService(intent)
         setUpMediaProjection()
         mMediaProjection!!.registerCallback(callback, null)
         mVirtualDisplay = createVirtualDisplay()

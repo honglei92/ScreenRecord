@@ -5,7 +5,7 @@ import java.io.File
 
 class Constants {
     companion object {
-        val directory = Environment.getExternalStorageDirectory().toString() + File.separator + "ScreenRecordings"
+        val directory = File.separator + "aScreenRecordings"
     }
 }
 
